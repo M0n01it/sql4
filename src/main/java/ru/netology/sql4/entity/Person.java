@@ -2,18 +2,20 @@ package ru.netology.sql4.entity;
 
 import jakarta.persistence.*;
 
-// Помечаем класс как Entity
 @Entity
 @Table(name = "PERSONS")
+@IdClass(PersonId.class)
 public class Person {
 
     @Id
     @Column(name = "name")
     private String name;
 
+    @Id
     @Column(name = "surname")
     private String surname;
 
+    @Id
     @Column(name = "age")
     private int age;
 
