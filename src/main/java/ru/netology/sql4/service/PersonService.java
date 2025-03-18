@@ -16,38 +16,27 @@ public class PersonService {
         this.personRepository = personRepository;
     }
 
-    // Получение списка Person по городу
+    // Получение списка людей по городу проживания
     public List<Person> getPersonsByCity(String city) {
-        return personRepository.findByCity(city);
+        return personRepository.findByCityOfLiving(city);
     }
 
-    // Получение списка Person, возраст которых меньше заданного, с сортировкой по возрастанию
+    // Получение списка людей с возрастом меньше указанного, отсортированных по возрастанию возраста
     public List<Person> getPersonsByAgeLessThan(int age) {
-        return personRepository.findByAgeLessThan(age);
+        return personRepository.findByAgeLessThanOrderByAgeAsc(age);
     }
 
-    // Поиск Person по имени и фамилии (возвращается первый найденный элемент)
+    // Поиск человека по имени и фамилии
     public Optional<Person> getPersonByNameAndSurname(String name, String surname) {
         return personRepository.findByNameAndSurname(name, surname);
     }
 
-    // Создание новой записи Person
-    public void create(Person person) {
-        personRepository.save(person);
+    // Дополнительно можно реализовать методы для остальных операций CRUD:
+    public Person savePerson(Person person) {
+        return personRepository.save(person);
     }
 
-    // Поиск Person по составному ключу
-    public Optional<Person> getPerson(String name, String surname, int age) {
-        return personRepository.findById(name, surname, age);
-    }
-
-    // Обновление записи Person
-    public Person update(Person person) {
-        return personRepository.update(person);
-    }
-
-    // Удаление записи Person
-    public void delete(Person person) {
+    public void deletePerson(Person person) {
         personRepository.delete(person);
     }
 }

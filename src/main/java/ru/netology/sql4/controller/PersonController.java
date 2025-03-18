@@ -2,6 +2,7 @@ package ru.netology.sql4.controller;
 
 import ru.netology.sql4.entity.Person;
 import ru.netology.sql4.service.PersonService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,40 +18,28 @@ public class PersonController {
         this.personService = personService;
     }
 
-    // Создание нового Person
-    @PostMapping
-    public void createPerson(@RequestBody Person person) {
-        personService.create(person);
-    }
-
-    // Получение всех Person по городу
+    // Эндпоинт для получения списка людей по городу проживания
+    // Пример запроса: GET /persons/by-city?city=Moscow
     @GetMapping("/by-city")
     public List<Person> getPersonsByCity(@RequestParam("city") String city) {
         return personService.getPersonsByCity(city);
     }
 
-    // Получение всех Person, у которых возраст меньше указанного, с сортировкой по возрастанию
+    // Эндпоинт для получения списка людей с возрастом меньше указанного, отсортированных по возрастанию
+    // Пример запроса: GET /persons/by-age?age=30
     @GetMapping("/by-age")
-    public List<Person> getPersonsByAge(@RequestParam("age") int age) {
+    public List<Person> getPersonsByAgeLessThan(@RequestParam("age") int age) {
         return personService.getPersonsByAgeLessThan(age);
     }
 
-    // Получение Person по имени и фамилии (первое найденное)
-    @GetMapping("/by-name-surname")
-    public Optional<Person> getPersonByNameAndSurname(@RequestParam("name") String name,
-                                                      @RequestParam("surname") String surname) {
-        return personService.getPersonByNameAndSurname(name, surname);
-    }
-
-    // Обновление данных Person
-    @PutMapping
-    public Person updatePerson(@RequestBody Person person) {
-        return personService.update(person);
-    }
-
-    // Удаление Person
-    @DeleteMapping
-    public void deletePerson(@RequestBody Person person) {
-        personService.delete(person);
+    // Эндпоинт для поиска человека по имени и фамилии
+    // Пример запроса: GET /persons/by-fullname?name=Ivan&surname=Ivanov
+    @GetMapping("/by-fullname")
+    public ResponseEntity<Person> getPersonByNameAndSurname(@RequestParam("name") String name,
+                                                            @RequestParam("surname") String surname) {
+        Optional<Person> personOptional = personService.getPersonByNameAndSurname(name, surname);
+        return personOptional
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
